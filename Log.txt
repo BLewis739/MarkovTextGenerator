@@ -1,0 +1,95 @@
+9/22/21
+
+The generate_text function currently cues to end a sentence
+anytime it generates a word that ends in punctuation. The
+next line is then started, and begins with a random choice
+based on the words under the $ key.
+
+However, in the create_dictionary function, no distinction
+is made for words that end in punctuation. So we currently
+make a dictionary that has many words ending in punctuation
+as keys, but they are never then accessed by generate_text.
+
+The dictionaries are very long and difficult to load in
+the shell due to their size. We should eliminate having these
+words as keys when they are not going to be used.
+
+Example:
+
+In 'Obama SOTU.txt' the output contained these sentences:
+
+And most important than average.
+But that's ready to see it harder for...
+
+d['average']
+>>>['family','person']
+d['average.']
+>>>['We're']
+
+Clearly it's not using the 'average.' key because otherwise
+the next sentence would start with 'We're'. So there shouldn't
+be a key for 'average.'. Fix this tomorrow.
+
+9/22
+
+Begin work on the dictionary problem outlined above.
+
+Reason for focusing on this piece is because we keep getting 
+the error below for certain files (i.e. run sheets):
+
+Traceback (most recent call last):
+  File "/Users/terrordome/Dropbox/All Excel Stuff/Python Programs/Markov Text Generator/Markov Text Generator.py", line 251, in <module>
+    generate_text(d, 150)
+  File "/Users/terrordome/Dropbox/All Excel Stuff/Python Programs/Markov Text Generator/Markov Text Generator.py", line 173, in generate_text
+    if next_word[-1] in pun_list:
+IndexError: string index out of range
+
+The string index out of range error tells me that for this
+kind of file, there are probably a lot of null strings 
+being added to the dictionary. I want to be able to look 
+more closely at the dictionary, but it is so long and it 
+really slows down IDLE if I try to expand it. I hope by
+shortening the dictionary, I can because load it and read 
+through it to see what exactly is being generated.
+
+
+---------------
+
+9/22 update
+
+Problem above was solved by adding a couple conditionals 
+to the create_dictionary function. I added a condition in
+the part that reads through the list of words generated
+from the text file and assigns them to the dictionary.
+
+if i + 1 != len(words) and words[i+1] != '':
+
+Originally, if i + 1 != len(words) was a condition for
+both of the two if-statements in this part of the program, 
+so I wanted to consolidate that into a nested loop anyway. 
+
+The second part, words[i+1] != '', is brand new. It allows 
+the loop to bypass adding values to the dictionary if the
+values are going to be null strings. This prevents them
+from ever getting into the dictionary to begin with. After
+comparing this run to the original program, it showed that
+the dictionary size had decreased from 198 lines to 188 lines,
+so while not huge, it did make a difference.
+
+Given the previous error, I suspected that some of the words 
+being added in the generate_text portion were actually null 
+strings. The error message wasn't always generated, so I 
+suspected that maybe some text files didn't create as many 
+null strings, or that by random chance, sometimes the nulls
+just didn't get picked and the program could run fine.
+
+The program now runs great for the run sheet inputs and 
+all other text files that I have tried. I wrote an annotated
+version to try to put on GitHub so become familiar with that
+process.
+
+I hope to incorporate JavaScript or some other tool to 
+eventually turn this into a web app. I want a window to
+pop up with two text boxes. Text can be copy/pasted into
+one window, then the output can be generated into the other 
+window.
