@@ -85,7 +85,7 @@ def generate_text(d,num_words):                     #d is the dictionary inputte
             text += '\n'                            #Add a newline character to the end for better readability
     print(text)
 
-d = create_dictionary("/Users/terrordome/Desktop/Projects/Markov Text Generator/NepWxT.txt")
+d = create_dictionary("NepWxT.txt")
 generate_text(d, 150)
     
     
